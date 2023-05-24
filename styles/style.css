@@ -7,4 +7,30 @@ body {
 
 header {
     background-color: #EE6C4D;
+    color: white;
+    text-transform: uppercase;
+    padding: 15px;
+}
+
+nav a {
+    font-size: .9rem;
+    transition: all .3s;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+nav a:hover {
+    color: #3d5a80;
+}
+
+footer {
+    color: #EE6C4D;
+    text-align: center;
+    border-top: 1px solid #EE6C4D;
+    padding: 15px 0 15px 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
 }
