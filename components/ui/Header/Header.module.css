@@ -1,0 +1,17 @@
+.Header {
+    background-color: #EE6C4D;
+    color: white;
+    text-transform: uppercase;
+    padding: 15px;
+}
+
+.Header nav a {
+    font-size: .9rem;
+    transition: all .3s;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+.Header nav a:hover {
+    color: #3d5a80;
+}

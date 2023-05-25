@@ -1,3 +1,11 @@
+import classes from './Footer.module.css';
+
 export default function Footer() {
-  return <footer className='container'>© Julien</footer>;
+  return (
+    <footer
+      className={[classes.Footer, 'container'].join(' ')}
+    >
+      © Julien
+    </footer>
+  );
 }

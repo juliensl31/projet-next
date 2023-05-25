@@ -1,6 +1,9 @@
+import classes from './Header.module.css';
+import Link from 'next/link';
+
 export default function Header() {
   return (
-    <header>
+    <header className={classes.Header}>
       <div
         className='container'
         style={{
@@ -21,13 +24,13 @@ export default function Header() {
             }}
           >
             <li>
-              <a href=''>Accueil</a>
+              <Link href='/'>Accueil</Link>
             </li>
             <li>
-              <a href=''>Projets</a>
+              <Link href='/projet'>Projets</Link>
             </li>
             <li>
-              <a href=''>Contact</a>
+              <Link href='/contact'>Contact</Link>
             </li>
           </ul>
         </nav>
