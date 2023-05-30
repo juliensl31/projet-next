@@ -1,10 +1,21 @@
-// component
+// Librairies
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
+import { useRouter } from 'next/router';
 
-export default function Projet() {
+export default function ProjetDuClient() {
+  // variables
+  const router = useRouter();
+  let nomDuClient = router.query.client;
+
+  if (nomDuClient === 'perso') {
+    nomDuClient = 'Projets personnels';
+  } else {
+    nomDuClient = `Projets de ${nomDuClient}`;
+  }
+
   return (
     <>
-      <h1>Mes Projets</h1>;
+      <h1>{nomDuClient}</h1>
       <div
         style={{
           display: 'grid',
