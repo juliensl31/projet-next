@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 // Composants
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
 import FiltresDeClient from '@/components/FiltresDeClient/FiltresDeClient';
+import { MongoClient } from 'mongodb';
 
-export default function ProjetDuClient() {
+export default function ProjetDuClient(props) {
   // variables
   const router = useRouter();
   let nomDuClient = router.query.client;
@@ -31,11 +32,40 @@ export default function ProjetDuClient() {
           marginTop: '15px',
         }}
       >
-        <CarteDeProjet />
-        <CarteDeProjet />
-        <CarteDeProjet />
-        <CarteDeProjet />
+        {props.projets.map((projet) => (
+          <CarteDeProjet key={projet.id} projet={projet} />
+        ))}
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  // variable de connection
+  let projets;
+  let client;
+
+  try {
+    // connection à MongoDB
+    client = await MongoClient.connect(
+      'mongodb+srv://JSL_Code:Lucalexia5653*@cluster0.zqphdhc.mongodb.net/portfolio?retryWrites=true&w=majority'
+    );
+
+    // connection à la base de donnée
+    const db = client.db();
+
+    // récupération des données
+    projets = await db
+      .collection('projets')
+      .find()
+      .toArray();
+  } catch (error) {
+    projets = [];
+  }
+
+  return {
+    props: {
+      projets: JSON.parse(JSON.stringify(projets)),
+    },
+  };
 }
