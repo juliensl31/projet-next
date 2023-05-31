@@ -5,9 +5,10 @@ import classes from './CarteDeProjet.module.css';
 
 // Méthode 1 (avec Link)
 
-export default function CarteDeProjet() {
+export default function CarteDeProjet(props) {
   //variables
-  const slug = 'Believemy';
+  const { titre, description, annee, slug, client } =
+    props.projet;
 
   return (
     <Link
@@ -21,14 +22,11 @@ export default function CarteDeProjet() {
       href={`/projets/${slug}`} //3eme méthode
       className={classes.CarteDeProjet}
     >
-      <h3>Titre du projet</h3>
-      <p>
-        Lorem Ipsum is simply dummy text of the printing and
-        typesetting industry. Lorem Ipsum has been the
-        industry standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book.
-      </p>
+      <h3>{titre}</h3>
+      <p>{description}</p>
+      <small>
+        {annee} {client}
+      </small>
     </Link>
   );
 }
