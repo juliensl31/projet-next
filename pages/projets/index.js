@@ -1,8 +1,6 @@
-// Librairie
-import { MongoClient } from 'mongodb';
-
 // component
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
+import { connectDatabase } from '@/helpers/mongodb';
 
 export default function Projet(props) {
   console.log(props.projets);
@@ -17,7 +15,8 @@ export default function Projet(props) {
         }}
       >
         {props.projets.map((projet) => (
-          <CarteDeProjet key={projet.id} projet={projet} />
+          // eslint-disable-next-line react/jsx-key
+          <CarteDeProjet projet={projet} />
         ))}
       </div>
     </>
@@ -27,21 +26,17 @@ export default function Projet(props) {
 export async function getStaticProps() {
   // variable de connection
   let projets;
-  let client;
 
   try {
-    // connection à MongoDB
-    client = await MongoClient.connect(
-      'mongodb+srv://JSL_Code:Lucalexia5653*@cluster0.zqphdhc.mongodb.net/portfolio?retryWrites=true&w=majority'
-    );
-
-    // connection à la base de donnée
+    // connection à la base de données
+    const client = await connectDatabase();
     const db = client.db();
 
     // récupération des données
     projets = await db
       .collection('projets')
       .find()
+      .sort({ annee: 'desc' })
       .toArray();
   } catch (error) {
     projets = [];

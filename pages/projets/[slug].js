@@ -1,10 +1,16 @@
+/* eslint-disable react/jsx-key */
 // Librairies
+import { connectDatabase } from '@/helpers/mongodb';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-export default function Projet() {
+export default function Projet(props) {
   // variables
-  const router = useRouter();
+  const { titre, description, annee, slug, client } = props.projet;
+  let clientAAfficher = client;
+
+  if (client === 'Projet personnel') {
+    clientAAfficher = 'perso';
+  }
 
   // Méthodes
   //   const titleClickedHandler = () => {
@@ -14,20 +20,70 @@ export default function Projet() {
 
   return (
     <>
-      <h1 style={{ marginBottom: '.5rem' }}>
-        {router.query.slug}
-      </h1>
-      <small>
+      <h1 style={{ marginBottom: '.5rem' }}>{titre}</h1>
+      <small style={{ display: 'flex', gap: '15px' }}>
         <Link
           style={{
             color: '#EE6C4D',
             textDecoration: 'none',
           }}
-          href='/perso'
+          href={`/${clientAAfficher}`}
         >
-          Projet personnel
+          {client}
         </Link>
+        <div>Projet réalisé en {annee}</div>
       </small>
     </>
   );
+}
+
+export async function getStaticPaths() {
+  //variables
+  let projets;
+
+  try {
+    // connection à mongodb
+    const client = await connectDatabase();
+    const db = client.db();
+
+    // récupération tous les projets
+    projets = await db.collection('projets').find().toArray();
+  } catch (error) {
+    projets = [];
+  }
+  const dynamicPaths = projets.map((projet) => ({
+    params: { slug: projet.slug },
+  }));
+
+  return {
+    paths: dynamicPaths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context) {
+  // variable
+  let projetRecupere;
+  const { params } = context;
+  const slug = params.slug;
+
+  try {
+    // connection à la base de données
+    const client = await connectDatabase();
+    const db = client.db();
+
+    // récupération des données
+    projetRecupere = await db
+      .collection('projets')
+      .find({ slug: slug })
+      .toArray();
+  } catch (error) {
+    projetRecupere = [];
+  }
+
+  return {
+    props: {
+      projet: JSON.parse(JSON.stringify(projetRecupere))[0],
+    },
+  };
 }

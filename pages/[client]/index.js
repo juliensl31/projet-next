@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 // Composants
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
 import FiltresDeClient from '@/components/FiltresDeClient/FiltresDeClient';
-import { MongoClient } from 'mongodb';
+import { connectDatabase } from '@/helpers/mongodb';
 
 export default function ProjetDuClient(props) {
   // variables
@@ -22,7 +22,10 @@ export default function ProjetDuClient(props) {
       <h1>{nomDuClient}</h1>
 
       {/* Filtres */}
-      <FiltresDeClient client={router.query.client} />
+      <FiltresDeClient
+        client={router.query.client}
+        annees={props.annees}
+      />
 
       <div
         style={{
@@ -33,39 +36,74 @@ export default function ProjetDuClient(props) {
         }}
       >
         {props.projets.map((projet) => (
-          <CarteDeProjet key={projet.id} projet={projet} />
+          // eslint-disable-next-line react/jsx-key
+          <CarteDeProjet projet={projet} />
         ))}
       </div>
     </>
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
+  // connection à la base de données
+  const client = await connectDatabase();
+  const db = client.db();
+
+  // récupération des données
+  const projets = await db.collection('projets').find().toArray();
+
+  let arrayPaths = projets.map((projet) => {
+    if (projet.client === 'Projet personnel') {
+      return 'perso';
+    } else {
+      return projet.client;
+    }
+  });
+  arrayPaths = [...new Set(arrayPaths)];
+  const dynamicPaths = arrayPaths.map((path) => ({
+    params: { client: path },
+  }));
+
+  return {
+    paths: dynamicPaths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context) {
   // variable de connection
   let projets;
-  let client;
+  let annees;
+  const { params } = context;
+  let clientParam = params.client;
+
+  if (clientParam == 'perso') {
+    clientParam = 'Projet personnel';
+  }
 
   try {
-    // connection à MongoDB
-    client = await MongoClient.connect(
-      'mongodb+srv://JSL_Code:Lucalexia5653*@cluster0.zqphdhc.mongodb.net/portfolio?retryWrites=true&w=majority'
-    );
+    // connection à la base de données
 
-    // connection à la base de donnée
+    const client = await connectDatabase();
     const db = client.db();
 
     // récupération des données
     projets = await db
       .collection('projets')
-      .find()
+      .find({ client: clientParam })
       .toArray();
+    projets = JSON.parse(JSON.stringify(projets));
+
+    annees = projets.map((projet) => projet.annee);
+    annees = [...new Set(annees)];
   } catch (error) {
     projets = [];
   }
 
   return {
     props: {
-      projets: JSON.parse(JSON.stringify(projets)),
+      projets: projets,
+      annees: annees,
     },
   };
 }

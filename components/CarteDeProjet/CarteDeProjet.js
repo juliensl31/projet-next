@@ -7,8 +7,7 @@ import classes from './CarteDeProjet.module.css';
 
 export default function CarteDeProjet(props) {
   //variables
-  const { titre, description, annee, slug, client } =
-    props.projet;
+  const { titre, description, annee, slug, client } = props.projet;
 
   return (
     <Link
@@ -24,9 +23,6 @@ export default function CarteDeProjet(props) {
     >
       <h3>{titre}</h3>
       <p>{description}</p>
-      <small>
-        {annee} {client}
-      </small>
     </Link>
   );
 }
