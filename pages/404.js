@@ -15,9 +15,7 @@ export default function Custom404() {
       >
         404
       </h1>
-      <p style={{ fontSize: '1.5rem' }}>
-        Cette page n existe pas!!!
-      </p>
+      <p style={{ fontSize: '1.5rem' }}>Cette page n'existe pas!!!</p>
     </div>
   );
 }

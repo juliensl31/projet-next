@@ -18,9 +18,10 @@ export default function FiltresDeClient(props) {
         Tout
       </Link>
 
-      {props.annees.map((annee) => (
+      {props.annees.map((annee, index) => (
         <Link
           href={`/${props.client}/${annee}`}
+          key={index}
           style={{
             backgroundColor: '#EE6C4D',
             padding: '5px 15px 5px 15px',

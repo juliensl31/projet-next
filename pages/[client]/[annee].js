@@ -38,7 +38,7 @@ export default function ProjetDuClientFiltre(props) {
       >
         {props.projets.map((projet) => (
           // eslint-disable-next-line react/jsx-key
-          <CarteDeProjet projet={projet} />
+          <CarteDeProjet projet={projet} key={projet._id} />
         ))}
       </div>
     </>
@@ -95,6 +95,7 @@ export async function getStaticProps(context) {
     projets = await db
       .collection('projets')
       .find({ client: clientParam })
+      .sort({ dateDePublication: 1 })
       .toArray();
     projets = JSON.parse(JSON.stringify(projets)); // Convertit les données en JSON
 
@@ -111,5 +112,6 @@ export async function getStaticProps(context) {
       projets: projets,
       annees: annees,
     },
+    revalidate: 3600,
   };
 }

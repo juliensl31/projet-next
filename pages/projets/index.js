@@ -6,7 +6,7 @@ export default function Projet(props) {
   console.log(props.projets);
   return (
     <>
-      <h1>Mes Projets</h1>;
+      <h1>Mes Projets</h1>
       <div
         style={{
           display: 'grid',
@@ -16,7 +16,7 @@ export default function Projet(props) {
       >
         {props.projets.map((projet) => (
           // eslint-disable-next-line react/jsx-key
-          <CarteDeProjet projet={projet} />
+          <CarteDeProjet projet={projet} key={projet._id} />
         ))}
       </div>
     </>
@@ -36,7 +36,7 @@ export async function getStaticProps() {
     projets = await db
       .collection('projets')
       .find()
-      .sort({ annee: 'desc' })
+      .sort({ dateDePublication: -1 })
       .toArray();
   } catch (error) {
     projets = [];
