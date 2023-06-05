@@ -11,14 +11,6 @@ export default function Home(props) {
     <main>
       <Head>
         <title>Julien | Développeur web et web mobile</title>
-        <meta
-          name='description'
-          content="Je suis développeur web et web mobile full-stack. J'ai créé ce site pour partager mes projets et mes expériences. Envie de collaborer avec moi ?"
-        />
-        <meta
-          name='keywords'
-          content='développeur web, développeur web mobile, développeur full-stack, développeur front-end, développeur back-end, développeur javascript, développeur react, développeur node, développeur next, développeur express, développeur mongodb'
-        />
       </Head>
       <h1>Bienvenue sur mon projet</h1>
       <div
@@ -57,13 +49,22 @@ export default function Home(props) {
             </a>
           </p>
         </div>
-        <Image
-          src='/moi.jpg'
-          width={150}
-          height={150}
-          alt='moi'
-          style={{ borderRadius: '100px' }}
-        />
+        <div>
+          <div
+            style={{
+              borderRadius: '50%',
+              overflow: 'hidden',
+              lineHeight: 0,
+            }}
+          >
+            <Image
+              src='/moi.jpg'
+              width={150}
+              height={150}
+              alt='moi'
+            />
+          </div>
+        </div>
       </div>
 
       <h2 style={{ marginTop: '45px', textTransform: 'capitalize' }}>
