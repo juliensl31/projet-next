@@ -9,6 +9,10 @@ export default function Ajouter() {
     formState: { errors },
   } = useForm();
 
+  // Méthodes
+  const onSubmittedHandler = (data) => {
+    console.log(data);
+  };
   return (
     <>
       <Head>
@@ -27,7 +31,27 @@ export default function Ajouter() {
             padding: '30px',
           }}
         >
-          <form>
+          {errors.titre ||
+          errors.slug ||
+          errors.client ||
+          errors.annee ||
+          errors.description ||
+          errors.contenu ? (
+            <div
+              style={{
+                background: '#ee6c4d',
+                color: 'white',
+                padding: '15px',
+                borderRadius: '5px',
+                marginBottom: '15px',
+                textAlign: 'center',
+              }}
+            >
+              Veuillez remplir tous les champs du formulaire !
+            </div>
+          ) : null}
+
+          <form onSubmit={handleSubmit(onSubmittedHandler)}>
             <p>
               <label htmlFor='titre'>Titre</label>
               <input
@@ -41,6 +65,9 @@ export default function Ajouter() {
                   borderRadius: '5px',
                   marginTop: '5px',
                 }}
+                {...register('titre', {
+                  required: true,
+                })}
               />
             </p>
             <p>
@@ -56,6 +83,9 @@ export default function Ajouter() {
                   borderRadius: '5px',
                   marginTop: '5px',
                 }}
+                {...register('slug', {
+                  required: true,
+                })}
               />
             </p>
             <p>
@@ -71,6 +101,9 @@ export default function Ajouter() {
                   borderRadius: '5px',
                   marginTop: '5px',
                 }}
+                {...register('client', {
+                  required: true,
+                })}
               />
             </p>
             <p>
@@ -86,6 +119,9 @@ export default function Ajouter() {
                   borderRadius: '5px',
                   marginTop: '5px',
                 }}
+                {...register('annee', {
+                  required: true,
+                })}
               />
             </p>
             <p>
@@ -102,6 +138,9 @@ export default function Ajouter() {
                   marginTop: '5px',
                   fontFamily: 'arial',
                 }}
+                {...register('description', {
+                  required: true,
+                })}
                 rows='5'
               ></textarea>
             </p>
@@ -119,6 +158,9 @@ export default function Ajouter() {
                   marginTop: '5px',
                   fontFamily: 'arial',
                 }}
+                {...register('contenu', {
+                  required: true,
+                })}
                 rows='5'
               ></textarea>
             </p>
