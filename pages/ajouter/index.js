@@ -10,8 +10,25 @@ export default function Ajouter() {
   } = useForm();
 
   // Méthodes
-  const onSubmittedHandler = (data) => {
-    console.log(data);
+  const onSubmittedHandler = async (data) => {
+    // Envoi des données sur notre API Next
+    const response = await fetch('/api/projet', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Récupération de la réponse de l'API
+    const fetchedData = await response.json();
+
+    // Redirection vers la page d'accueil
+    if (!response.ok) {
+      console.log(fetchedData.message || 'Une erreur est survenue !');
+    } else {
+      console.log(fetchedData);
+    }
   };
   return (
     <>
@@ -166,13 +183,13 @@ export default function Ajouter() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'end' }}>
               <button
-                type='submit'
                 style={{
                   border: 0,
                   background: '#ee6c4d',
                   color: 'white',
                   padding: '10px 15px 10px 15px',
                   borderRadius: '5px',
+                  cursor: 'pointer',
                 }}
               >
                 Ajouter
