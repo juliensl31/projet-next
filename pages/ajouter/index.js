@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+import { SpinnerDotted } from 'spinners-react';
+import { useState } from 'react';
 
 export default function Ajouter() {
   // Variable
@@ -9,25 +11,37 @@ export default function Ajouter() {
     formState: { errors },
   } = useForm();
 
+  // States
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+
   // Méthodes
   const onSubmittedHandler = async (data) => {
-    // Envoi des données sur notre API Next
-    const response = await fetch('/api/projet', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    // Vérification du chargement
+    if (!loading) {
+      setLoading(true);
+      // Envoi des données sur notre API Next
+      const response = await fetch('/api/projet', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    // Récupération de la réponse de l'API
-    const fetchedData = await response.json();
+      // Récupération de la réponse de l'API
+      const fetchedData = await response.json();
 
-    // Redirection vers la page d'accueil
-    if (!response.ok) {
-      console.log(fetchedData.message || 'Une erreur est survenue !');
-    } else {
-      console.log(fetchedData);
+      // Redirection vers la page d'accueil
+      if (!response.ok) {
+        setLoading(false);
+        console.log(
+          fetchedData.message || 'Une erreur est survenue !'
+        );
+      } else {
+        setLoading(false);
+        console.log(fetchedData);
+      }
     }
   };
   return (
@@ -48,12 +62,12 @@ export default function Ajouter() {
             padding: '30px',
           }}
         >
-          {errors.titre ||
-          errors.slug ||
-          errors.client ||
-          errors.annee ||
-          errors.description ||
-          errors.contenu ? (
+          {(errors.titre ||
+            errors.slug ||
+            errors.client ||
+            errors.annee ||
+            errors.description ||
+            errors.contenu) && (
             <div
               style={{
                 background: '#ee6c4d',
@@ -66,7 +80,21 @@ export default function Ajouter() {
             >
               Veuillez remplir tous les champs du formulaire !
             </div>
-          ) : null}
+          )}
+          {error && (
+            <div
+              style={{
+                background: '#ee6c4d',
+                color: 'white',
+                padding: '15px',
+                borderRadius: '5px',
+                marginBottom: '15px',
+                textAlign: 'center',
+              }}
+            >
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmittedHandler)}>
             <p>
@@ -192,7 +220,16 @@ export default function Ajouter() {
                   cursor: 'pointer',
                 }}
               >
-                Ajouter
+                {!loading ? (
+                  <SpinnerDotted
+                    size={20}
+                    thickness={100}
+                    speed={100}
+                    color='#ffffff'
+                  />
+                ) : (
+                  'Ajouter'
+                )}
               </button>
             </div>
           </form>
