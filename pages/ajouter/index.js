@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { SpinnerDotted } from 'spinners-react';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Ajouter() {
   // Variable
@@ -10,6 +11,8 @@ export default function Ajouter() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const router = useRouter();
 
   // States
   const [loading, setLoading] = useState(false);
@@ -20,6 +23,7 @@ export default function Ajouter() {
     // Vérification du chargement
     if (!loading) {
       setLoading(true);
+      setError(null);
       // Envoi des données sur notre API Next
       const response = await fetch('/api/projet', {
         method: 'POST',
@@ -32,15 +36,16 @@ export default function Ajouter() {
       // Récupération de la réponse de l'API
       const fetchedData = await response.json();
 
-      // Redirection vers la page d'accueil
+      // Vérification de la réponse
       if (!response.ok) {
+        // Si erreur de la part de l'API Next
         setLoading(false);
-        console.log(
-          fetchedData.message || 'Une erreur est survenue !'
-        );
+        // Affichage de l'erreur
+        setError(fetchedData.message || 'Une erreur est survenue !');
       } else {
         setLoading(false);
-        console.log(fetchedData);
+        // Redirection vers la page du projet
+        router.replace(`/projets/${fetchedData.projet.slug}`);
       }
     }
   };
@@ -220,7 +225,7 @@ export default function Ajouter() {
                   cursor: 'pointer',
                 }}
               >
-                {!loading ? (
+                {loading ? (
                   <SpinnerDotted
                     size={20}
                     thickness={100}
