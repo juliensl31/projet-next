@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 // Components
 import Button from '@/components/ui/Button/Button';
+import Error from '@/components/ui/Error/Error';
 
 export default function Ajouter() {
   // Variable
@@ -78,33 +79,11 @@ export default function Ajouter() {
             errors.annee ||
             errors.description ||
             errors.contenu) && (
-            <div
-              style={{
-                background: '#ee6c4d',
-                color: 'white',
-                padding: '15px',
-                borderRadius: '5px',
-                marginBottom: '15px',
-                textAlign: 'center',
-              }}
-            >
+            <Error>
               Veuillez remplir tous les champs du formulaire !
-            </div>
+            </Error>
           )}
-          {error && (
-            <div
-              style={{
-                background: '#ee6c4d',
-                color: 'white',
-                padding: '15px',
-                borderRadius: '5px',
-                marginBottom: '15px',
-                textAlign: 'center',
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <Error>{error}</Error>}
 
           <form onSubmit={handleSubmit(onSubmittedHandler)}>
             <p>

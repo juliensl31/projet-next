@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
     <Layout>
       <Head>
         <title>Julien | Développeur web et web mobile</title>
-      </Head>{' '}
+      </Head>
       <Component {...pageProps} />
     </Layout>
   );
