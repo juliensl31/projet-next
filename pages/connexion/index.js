@@ -3,25 +3,46 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth';
+import { useRouter } from 'next/router';
 
 // Components
 import Button from '@/components/ui/Button/Button';
+import Error from '@/components/ui/Error/Error';
 
 export default function Connexion() {
   // Variables
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // Methods
-  const onFormSubmittedHandler = (data) => {
-    console.log(data);
-  };
+  const router = useRouter();
+
   // States
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+
+  // Methods
+  const onFormSubmittedHandler = async (data) => {
+    setLoading(true);
+    setError(null);
+
+    const resultat = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+    setLoading(false);
+
+    if (resultat.error) {
+      setError(resultat.error);
+    } else {
+      // Redirection
+      router.replace('/');
+    }
+  };
 
   return (
     <>
@@ -43,6 +64,7 @@ export default function Connexion() {
             padding: '30px',
           }}
         >
+          {error && <Error>{error}</Error>}
           <form onSubmit={handleSubmit(onFormSubmittedHandler)}>
             <p>
               <label htmlFor='email'>Email</label>
