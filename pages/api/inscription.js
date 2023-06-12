@@ -1,9 +1,11 @@
 // Librairies
+import { hashPassword } from '@/helpers/auth';
 import { connectDatabase } from '@/helpers/mongodb';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { pseudo, email, password } = req.body;
+    const { pseudo, email } = req.body;
+    let { password } = req.body;
 
     // 1er etape : vérifier que tous les champs sont renseignés
     if (!pseudo || !email || !password) {
@@ -12,6 +14,9 @@ export default async function handler(req, res) {
         .json({ message: 'Un ou plusieurs champs sont manquants' });
       return;
     }
+
+    // Etape intermédiaire : securiser le mot de passe
+    password = await hashPassword(password);
 
     // 2eme etape : Stocker le nouvel utilisateur dans la base de données
     const nouvelUtilisateur = {
@@ -73,12 +78,10 @@ export default async function handler(req, res) {
 
     // Succès
     clientMongoDB.close();
-    res
-      .status(201)
-      .json({
-        message: 'Utilisateur créé.',
-        utilisateur: nouvelUtilisateur,
-      });
+    res.status(201).json({
+      message: 'Utilisateur créé.',
+      utilisateur: nouvelUtilisateur,
+    });
   } else {
     res.status(405).json({ message: 'Une erreur est survenue' });
   }
