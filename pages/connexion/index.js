@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useForm } from 'react-hook-form';
-import { signIn } from 'next-auth';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 // Components

@@ -2,11 +2,17 @@
 import Image from 'next/image';
 import { connectDatabase } from '@/helpers/mongodb';
 import Head from 'next/head';
+import { useSession } from 'next-auth/react';
 
 // Composants
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
 
 export default function Home(props) {
+  // Variables
+  const { data: session } = useSession();
+
+  console.log(session);
+
   return (
     <main>
       <Head>
