@@ -1,6 +1,6 @@
 // Librairies
 import NextAuth from 'next-auth';
-import { connectToDatabase } from '@/helpers/mongodb';
+import { connectDatabase } from '@/helpers/mongodb';
 import { verifyPassword } from '@/helpers/auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -15,7 +15,7 @@ export default NextAuth({
         const { email, password } = credentials;
 
         // Connexion à MongoDB
-        const clientMongoDb = await connectToDatabase();
+        const clientMongoDb = await connectDatabase();
 
         // Recherche de l'utilisateur
         const utilisateur = await clientMongoDb
@@ -43,7 +43,7 @@ export default NextAuth({
         clientMongoDb.close();
         return {
           email: utilisateur.email,
-          pseudo: utilisateur.pseudo,
+          name: utilisateur.pseudo,
         };
       },
     }),

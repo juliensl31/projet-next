@@ -2,23 +2,23 @@
 import Image from 'next/image';
 import { connectDatabase } from '@/helpers/mongodb';
 import Head from 'next/head';
-import { useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 
 // Composants
 import CarteDeProjet from '@/components/CarteDeProjet/CarteDeProjet';
 
 export default function Home(props) {
-  // Variables
-  const { data: session } = useSession();
-
-  console.log(session);
-
   return (
     <main>
       <Head>
         <title>Julien | Développeur web et web mobile</title>
       </Head>
-      <h1>Bienvenue sur mon projet</h1>
+      <h1>
+        Bienvenue{' '}
+        {props.utilisateur
+          ? props.utilisateur.name
+          : 'sur mon portfolio'}
+      </h1>
       <div
         style={{
           border: '2px solid #ee6c4d',
@@ -92,9 +92,15 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   // variable de connection
   let projets;
+  const session = await getSession({ req: context.req });
+  let utilisateur = null;
+
+  if (session) {
+    utilisateur = session.user;
+  }
 
   try {
     // connection à la base de données
@@ -115,7 +121,7 @@ export async function getStaticProps() {
   return {
     props: {
       projets: JSON.parse(JSON.stringify(projets)),
+      utilisateur: utilisateur,
     },
-    revalidate: 60,
   };
 }
