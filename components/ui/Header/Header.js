@@ -51,20 +51,21 @@ export default function Header() {
                 </li>
               </>
             )}
-            {session && (
-              <>
+            {session &&
+              session.user.roles.includes('administrateur') && (
                 <li>
                   <Link href='/ajouter'>Ajouter</Link>
                 </li>
-                <li>
-                  <a
-                    onClick={onLogoutClickedHandler}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Déconnexion
-                  </a>
-                </li>
-              </>
+              )}
+            {session && (
+              <li>
+                <a
+                  onClick={onLogoutClickedHandler}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Déconnexion
+                </a>
+              </li>
             )}
           </ul>
         </nav>

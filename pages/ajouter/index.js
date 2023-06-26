@@ -189,6 +189,15 @@ export async function getServerSideProps(context) {
     };
   }
 
+  if (session && !session.user.roles.includes('administrateur')) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
       session,

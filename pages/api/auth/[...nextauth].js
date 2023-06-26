@@ -44,8 +44,25 @@ export default NextAuth({
         return {
           email: utilisateur.email,
           name: utilisateur.pseudo,
+          id: utilisateur._id,
+          roles: utilisateur.roles,
         };
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.user = user;
+      }
+
+      return token;
+    },
+
+    session: async ({ session, token }) => {
+      session.user = token.user;
+
+      return session;
+    },
+  },
 });

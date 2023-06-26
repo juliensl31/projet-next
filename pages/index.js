@@ -100,6 +100,7 @@ export async function getServerSideProps(context) {
 
   if (session) {
     utilisateur = session.user;
+    console.log(utilisateur);
   }
 
   try {

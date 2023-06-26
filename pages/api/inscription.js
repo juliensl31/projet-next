@@ -23,6 +23,7 @@ export default async function handler(req, res) {
       pseudo,
       email,
       password,
+      roles: ['utilisateur'],
     };
 
     // 3eme etape : Vérifier la syntaxe l'email est valide
