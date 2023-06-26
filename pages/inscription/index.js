@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useForm } from 'react-hook-form';
+import { getSession } from 'next-auth/react';
 
 // Components
 import Button from '@/components/ui/Button/Button';
@@ -149,4 +150,24 @@ export default function Inscription() {
       </section>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+
+  // Si l'utilisateur n'est pas connecté
+  if (session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 }

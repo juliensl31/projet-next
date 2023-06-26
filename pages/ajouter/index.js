@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { SpinnerDotted } from 'spinners-react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
 
 // Components
 import Button from '@/components/ui/Button/Button';
@@ -173,4 +174,24 @@ export default function Ajouter() {
       </section>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+
+  // Si l'utilisateur n'est pas connecté
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/connexion',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 }
