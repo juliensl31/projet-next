@@ -19,23 +19,22 @@ export default function Home(props) {
       setIsLoading(true);
       setError(null);
 
-      //Envoyer demande de suppression
-      const response = await fetch('/api/utilisateur/supprimer', {
+      // Envoyer ma demande de suppression
+      const reponse = await fetch('/api/utilisateur/supprimer', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      const data = await response.json();
 
-      if (!response.ok) {
-        setError(data.message || 'Une erreur est survenue');
+      const fetchedData = await reponse.json();
+
+      if (!reponse.ok) {
         setIsLoading(false);
-        return;
+        setError(fetchedData.message || 'Une erreur est survenue');
       } else {
-        //Supprimer les cookies
-        signOut();
         setIsLoading(false);
+        signOut();
       }
     }
   };
@@ -46,7 +45,7 @@ export default function Home(props) {
         <title>Julien | Développeur web et web mobile</title>
       </Head>
       <h1>
-        Bienvenue
+        Bienvenue{' '}
         {props.utilisateur
           ? props.utilisateur.name
           : 'sur mon portfolio'}
