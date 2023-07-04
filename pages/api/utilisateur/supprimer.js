@@ -1,10 +1,11 @@
 // Librairies
 import { connectDatabase } from '@/helpers/mongodb';
-import { getSession } from 'next-auth/react';
+import NextAuth from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 
 export default async function handler(req, res) {
   if (req.method === 'DELETE') {
-    const session = await getSession({ req: req });
+    const session = await getServerSession(req, res, NextAuth);
 
     if (!session) {
       res.status(401).json({
