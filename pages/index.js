@@ -48,7 +48,8 @@ export default function Home(props) {
         Bienvenue{' '}
         {props.utilisateur
           ? props.utilisateur.name
-          : 'sur mon portfolio'}
+          : 'sur mon portfolio'}{' '}
+        !
       </h1>
       <div
         style={{
